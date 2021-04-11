@@ -17,10 +17,10 @@ class SelectState extends StatefulWidget {
   const SelectState(
       {Key key,
         this.onCityChanged,
-      this.onCountryChanged,
-      this.onStateChanged,
-      this.style,
-      this.dropdownColor})
+        this.onCountryChanged,
+        this.onStateChanged,
+        this.style,
+        this.dropdownColor})
       : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class SelectState extends StatefulWidget {
 
 class _SelectStateState extends State<SelectState> {
   List<String> _country = ["United States"];
-  String _selectedCountry = "United States";
+  String _selectedCountry = "🇺🇸    United States";
   String _selectedState = "Choose State";
   List<String> _states = ["Choose State"];
   var responses;
@@ -56,7 +56,7 @@ class _SelectStateState extends State<SelectState> {
         print(model.name);
         if (!mounted) return;
         setState(() {
-        _country.add(model.emoji + "    " + model.name);
+          _country.add(model.emoji + "    " + model.name);
         });
       }
     });
@@ -65,7 +65,6 @@ class _SelectStateState extends State<SelectState> {
   }
 
   Future getState() async {
-    print("Selected country" + _selectedCountry);
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
@@ -103,6 +102,7 @@ class _SelectStateState extends State<SelectState> {
     if (!mounted) return;
     setState(() {
       this.widget.onStateChanged(value);
+      _selectedState = value;
     });
   }
 
@@ -123,7 +123,6 @@ class _SelectStateState extends State<SelectState> {
           onChanged: (value) => _onSelectedState(value),
           value: _selectedState,
         ),
-        Text("United States"),
       ],
     );
   }
