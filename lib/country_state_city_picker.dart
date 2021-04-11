@@ -1,5 +1,7 @@
 library country_state_city_picker;
 
+//import 'dart:html';
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -26,15 +28,15 @@ class SelectState extends StatefulWidget {
 }
 
 class _SelectStateState extends State<SelectState> {
-  List<String> _country = ["Choose Country"];
-  String _selectedCountry = "Choose Country";
+  List<String> _country = ["United States"];
+  String _selectedCountry = "United States";
   String _selectedState = "Choose State";
   List<String> _states = ["Choose State"];
   var responses;
 
   @override
   void initState() {
-    getCounty();
+    getState();
     super.initState();
   }
 
@@ -44,13 +46,14 @@ class _SelectStateState extends State<SelectState> {
     return jsonDecode(res);
   }
 
-  Future getCounty() async {
+  Future getCountry() async {
     var countries = await getResponse() as List;
     countries.forEach((data) {
       var model = StatusModel.StatusModel();
       model.name = data['name'];
       model.emoji = data['emoji'];
       if (model.name == "United States") {
+        print(model.name);
         if (!mounted) return;
         setState(() {
         _country.add(model.emoji + "    " + model.name);
@@ -62,6 +65,7 @@ class _SelectStateState extends State<SelectState> {
   }
 
   Future getState() async {
+    print("Selected country" + _selectedCountry);
     var response = await getResponse();
     var takestate = response
         .map((map) => StatusModel.StatusModel.fromJson(map))
@@ -110,25 +114,6 @@ class _SelectStateState extends State<SelectState> {
         DropdownButton<String>(
           dropdownColor: widget.dropdownColor,
           isExpanded: true,
-          items: _country.map((String dropDownStringItem) {
-            return DropdownMenuItem<String>(
-              value: dropDownStringItem,
-              child: Row(
-                children: [
-                  Text(
-                    dropDownStringItem,
-                    style: widget.style,
-                  )
-                ],
-              ),
-            );
-          }).toList(),
-          onChanged: (value) => _onSelectedCountry(value),
-          value: _selectedCountry,
-        ),
-        DropdownButton<String>(
-          dropdownColor: widget.dropdownColor,
-          isExpanded: true,
           items: _states.map((String dropDownStringItem) {
             return DropdownMenuItem<String>(
               value: dropDownStringItem,
@@ -138,9 +123,7 @@ class _SelectStateState extends State<SelectState> {
           onChanged: (value) => _onSelectedState(value),
           value: _selectedState,
         ),
-        SizedBox(
-          height: 10.0,
-        ),
+        Text("United States"),
       ],
     );
   }
